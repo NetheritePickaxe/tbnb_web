@@ -5,7 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TBNB-后室永无止境！</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css?v=1.1">
+    <style>
+        /* 登录模态框样式 */
+        .login-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .login-modal.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-modal-content {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            animation: modalSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #999;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .close-btn:hover {
+            color: #ffd700;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            color: #ffd700;
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #777;
+        }
+
+        .form-login-btn {
+            width: 100%;
+            padding: 0.9rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ffc107 100%);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+    </style>
 </head>
 <body>
     <!-- 上方标题栏 -->
@@ -14,7 +153,8 @@
             <h1>TBNB <span>BACKROOMS</span></h1>
             <!-- 在index.html的header部分 -->
             <div class="header-actions">
-                <button class="login-btn" onclick="window.location.href='wiki.html'">登录/百科</button>
+                <button class="login-btn" onclick="showLoginModal()">登录</button>
+                <button class="login-btn" onclick="window.location.href='download.html'">下载</button>
             </div>
         </div>
     </header>
@@ -29,6 +169,7 @@
                 <li class="sidebar-item"><a href="#team" class="sidebar-link">核心团队</a></li>
                 <li class="sidebar-item"><a href="#contact" class="sidebar-link">联系我们</a></li>
                 <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+                <li class="sidebar-item"><a href="download.html" class="sidebar-link">下载</a></li>
             </ul>
         </nav>
     </aside>
@@ -43,6 +184,29 @@
                 <h2 class="hero-title">持续游戏 <span>创新</span>，保持良好 <span>质量</span></h2>
                 <p class="hero-subtitle">专业的服务器团队，为您的游戏体验保驾护航</p>
                 <a href="#services" class="btn"><span>了解更多</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 公告栏 -->
+    <section class="announcement" id="announcement">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">最新<span>公告</span></h2>
+                <p class="section-subtitle">服务器最新动态和重要通知</p>
+            </div>
+            <div class="announcement-content">
+                <div class="announcement-list" id="announcementList">
+                    <!-- 公告内容将通过JavaScript动态生成 -->
+                    <div class="announcement-item">
+                        <h3 class="announcement-title">欢迎来到TBNB服务器</h3>
+                        <p class="announcement-date">2026-03-02</p>
+                        <p class="announcement-text">服务器已正式上线，欢迎各位玩家加入！</p>
+                    </div>
+                </div>
+                <div class="announcement-actions" id="announcementActions" style="display: none;">
+                    <button class="btn" id="addAnnouncementBtn">发布公告</button>
+                </div>
             </div>
         </div>
     </section>
@@ -128,7 +292,7 @@
             </div>
             <div class="team-grid">
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('柠檬头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/柠檬头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">酸柠檬serendipity</h3>
                         <p class="member-position">建筑、美工、策划、代码</p>
@@ -136,7 +300,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('合金头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/合金头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">pickaxe_e</h3>
                         <p class="member-position">服务器支持、整合包制作、插件整合</p>
@@ -144,7 +308,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('南宫头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/南宫头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">新史低 南宫墨铭</h3>
                         <p class="member-position">美工、玩家沟通、服务器运营</p>
@@ -152,7 +316,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('steve头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/steve头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">Steve58722</h3>
                         <p class="member-position">人</p>
@@ -160,7 +324,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('忆霜头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/忆霜头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">忆霜frosty</h3>
                         <p class="member-position">代码技术支持</p>
@@ -168,7 +332,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('CHlongjun头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/CHlongjun头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">CHlongjun</h3>
                         <p class="member-position">本网站制作者、添乱者、屎山代码制造者</p>
@@ -176,7 +340,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('绿sans头像1.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/绿sans头像1.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">Gre_Iaos</h3>
                         <p class="member-position">建筑</p>
@@ -184,7 +348,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('心碎头像.jpg');"></div>
+                    <div class="member-image" style="background-image: url('images/心碎头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">心碎碎</h3>
                         <p class="member-position">那个叫南宫墨铭的⑨是baka</p>
@@ -220,7 +384,7 @@
                     <div class="qq-group-info">
                         <p>扫描下方二维码或搜索群号加入我们的QQ群，获取更多信息和资源。</p>
                         <div class="qq-qrcode">
-                            <img src="QQ群加入二维码.jpg" alt="QQ群加入二维码" style="width: auto; height: auto; max-width: 300px; max-height: 300px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); transition: all 0.3s ease; margin: 0 auto; display: block;">
+                            <img src="images/QQ群加入二维码.jpg" alt="QQ群加入二维码" style="width: auto; height: auto; max-width: 300px; max-height: 300px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); transition: all 0.3s ease; margin: 0 auto; display: block;">
                         </div>
                         <button type="button" class="btn" onclick="window.open('https://jq.qq.com/?_wv=1027&k=your_key', '_blank')">
                             <span>立即加入</span>
@@ -235,6 +399,52 @@
     <button class="back-to-top" id="backToTop">
         <span class="icon"></span>
     </button>
+
+    <!-- 登录模态框 -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-modal-content">
+            <span class="close-btn" id="closeLoginModal">&times;</span>
+            <div class="modal-header">
+                <h2>系统登录</h2>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit" class="btn form-login-btn">登录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布公告模态框 -->
+    <div class="login-modal" id="announcementModal">
+        <div class="login-modal-content">
+            <span class="close-btn" id="closeAnnouncementModal">&times;</span>
+            <div class="modal-header">
+                <h2>发布公告</h2>
+            </div>
+            <div class="modal-body">
+                <form id="announcementForm">
+                    <div class="form-group">
+                        <label for="announcementTitle">标题</label>
+                        <input type="text" id="announcementTitle" name="announcementTitle" placeholder="请输入公告标题" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="announcementText">内容</label>
+                        <textarea id="announcementText" name="announcementText" placeholder="请输入公告内容" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn form-login-btn">发布</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- 页脚 -->
     <footer class="footer">
@@ -252,6 +462,7 @@
                         <li><a href="#services">服务项目</a></li>
                         <li><a href="#team">核心团队</a></li>
                         <li><a href="#contact">联系我们</a></li>
+                        <li><a href="download.html">下载</a></li>
                     </ul>
                 </div>
 
@@ -264,7 +475,7 @@
     </main>
 
     <!-- JavaScript 文件 -->
-    <script src="script.js"></script>
+    <script src="scripts/script.js"></script>
     <script>
         // 检查服务器状态
         function checkServerStatus() {
@@ -306,9 +517,220 @@
             xhr.send();
         }
         
-        // 页面加载时检查服务器状态
+        // 检查登录状态，显示发布公告按钮
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('wiki_logged_in') === 'true';
+            const announcementActions = document.getElementById('announcementActions');
+            
+            if (isLoggedIn && announcementActions) {
+                announcementActions.style.display = 'block';
+            }
+        }
+        
+        // 登录功能
+        function initLoginFunction() {
+            console.log('初始化登录功能');
+            const loginModal = document.getElementById('loginModal');
+            const closeLoginModal = document.getElementById('closeLoginModal');
+            const loginForm = document.getElementById('loginForm');
+            
+            console.log('登录模态框元素:', loginModal);
+            console.log('关闭按钮元素:', closeLoginModal);
+            console.log('登录表单元素:', loginForm);
+            
+            // 显示登录模态框
+            window.showLoginModal = function() {
+                console.log('点击了登录按钮');
+                if (loginModal) {
+                    console.log('添加active类');
+                    loginModal.classList.add('active');
+                    console.log('登录模态框当前类:', loginModal.className);
+                } else {
+                    console.error('登录模态框元素未找到');
+                }
+            };
+            
+            // 关闭登录模态框
+            if (closeLoginModal) {
+                closeLoginModal.addEventListener('click', function() {
+                    if (loginModal) {
+                        loginModal.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 点击模态框外部关闭
+            if (loginModal) {
+                loginModal.addEventListener('click', function(e) {
+                    if (e.target === loginModal) {
+                        loginModal.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 提交登录表单
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // 简单的登录验证（实际项目中应该使用后端验证）
+                    if (username && password) {
+                        // 保存登录状态
+                        localStorage.setItem('wiki_logged_in', 'true');
+                        localStorage.setItem('username', username);
+                        
+                        // 关闭模态框
+                        if (loginModal) {
+                            loginModal.classList.remove('active');
+                        }
+                        
+                        // 刷新页面或更新UI
+                        location.reload();
+                    } else {
+                        alert('请输入用户名和密码');
+                    }
+                });
+            }
+        }
+        
+        // 发布公告功能
+        function initAnnouncement功能() {
+            const addAnnouncementBtn = document.getElementById('addAnnouncementBtn');
+            const announcementModal = document.getElementById('announcementModal');
+            const closeAnnouncementModal = document.getElementById('closeAnnouncementModal');
+            const announcementForm = document.getElementById('announcementForm');
+            const announcementList = document.getElementById('announcementList');
+            
+            // 打开发布公告模态框
+            if (addAnnouncementBtn) {
+                addAnnouncementBtn.addEventListener('click', function() {
+                    announcementModal.classList.add('active');
+                });
+            }
+            
+            // 关闭发布公告模态框
+            if (closeAnnouncementModal) {
+                closeAnnouncementModal.addEventListener('click', function() {
+                    announcementModal.classList.remove('active');
+                });
+            }
+            
+            // 点击模态框外部关闭
+            if (announcementModal) {
+                announcementModal.addEventListener('click', function(e) {
+                    if (e.target === announcementModal) {
+                        announcementModal.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 提交公告表单
+            if (announcementForm) {
+                announcementForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const title = document.getElementById('announcementTitle').value;
+                    const text = document.getElementById('announcementText').value;
+                    const date = new Date().toISOString().split('T')[0];
+                    
+                    // 创建公告对象
+                    const announcement = {
+                        id: Date.now(),
+                        title: title,
+                        text: text,
+                        date: date
+                    };
+                    
+                    // 获取现有公告
+                    let announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+                    
+                    // 添加新公告到开头
+                    announcements.unshift(announcement);
+                    
+                    // 保存到本地存储
+                    localStorage.setItem('announcements', JSON.stringify(announcements));
+                    
+                    // 刷新公告列表
+                    loadAnnouncements();
+                    
+                    // 关闭模态框
+                    announcementModal.classList.remove('active');
+                    
+                    // 清空表单
+                    announcementForm.reset();
+                });
+            }
+            
+            // 加载公告
+            function loadAnnouncements() {
+                if (!announcementList) return;
+                
+                // 获取公告数据
+                let announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+                
+                // 检查是否登录
+                const isLoggedIn = localStorage.getItem('wiki_logged_in') === 'true';
+                
+                // 如果没有公告，显示默认公告
+                if (announcements.length === 0) {
+                    announcementList.innerHTML = `
+                        <div class="announcement-item">
+                            <h3 class="announcement-title">欢迎来到TBNB服务器</h3>
+                            <p class="announcement-date">2026-03-02</p>
+                            <p class="announcement-text">服务器已正式上线，欢迎各位玩家加入！</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 渲染公告列表
+                announcementList.innerHTML = announcements.map(announcement => `
+                    <div class="announcement-item" data-id="${announcement.id}">
+                        <h3 class="announcement-title">${announcement.title}</h3>
+                        <p class="announcement-date">${announcement.date}</p>
+                        <p class="announcement-text">${announcement.text}</p>
+                        ${isLoggedIn ? `
+                            <div style="margin-top: 1rem; text-align: right;">
+                                <button class="btn-small delete-announcement-btn" style="background: rgba(255, 0, 0, 0.2); color: #ff4444; border: 1px solid rgba(255, 0, 0, 0.3);">删除</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+                
+                // 添加删除按钮事件监听器
+                if (isLoggedIn) {
+                    const deleteButtons = document.querySelectorAll('.delete-announcement-btn');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const announcementItem = this.closest('.announcement-item');
+                            const announcementId = parseInt(announcementItem.dataset.id);
+                            
+                            if (confirm('确定要删除这个公告吗？')) {
+                                // 从本地存储中删除公告
+                                let updatedAnnouncements = announcements.filter(ann => ann.id !== announcementId);
+                                localStorage.setItem('announcements', JSON.stringify(updatedAnnouncements));
+                                
+                                // 重新加载公告列表
+                                loadAnnouncements();
+                            }
+                        });
+                    });
+                }
+            }
+            
+            // 初始加载公告
+            loadAnnouncements();
+        }
+        
+        // 页面加载时检查服务器状态和登录状态
         document.addEventListener('DOMContentLoaded', function() {
             checkServerStatus();
+            checkLoginStatus();
+            initLoginFunction();
+            initAnnouncement功能();
             
             // 每30秒检查一次服务器状态
             setInterval(checkServerStatus, 30000);

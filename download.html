@@ -5,25 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>下载页面 - TBNB</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css?v=1.1">
     <style>
-        /* 为body元素添加背景图片，并禁用默认的渐变和动画 */
-        body {
-            background-image: url('A371B56EAFF542E3A1C3A7CBAEA9D2ED.jpg') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            background-attachment: fixed !important;
-            animation: none !important;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* 禁用背景粒子效果 */
-        body::before {
-            display: none !important;
-        }
-        
         /* 探照灯效果 */
         .spotlight {
             position: fixed;
@@ -39,21 +22,6 @@
             box-shadow: 0 0 100px rgba(255, 255, 255, 0.3);
         }
         
-        /* 确保内容区域有足够的对比度 */
-        .hero-content {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2rem;
-            border-radius: 10px;
-        }
-        
-        /* 确保header和sidebar有背景，以便在图片背景上清晰显示 */
-        .top-header {
-            background: rgba(0, 0, 0, 0.8) !important;
-        }
-        
-        .sidebar {
-            background: rgba(0, 0, 0, 0.8) !important;
-        }
         
         /* 公约模态框 */
         .convention-modal {
@@ -151,6 +119,7 @@
                 <li class="sidebar-item"><a href="index.html#team" class="sidebar-link">核心团队</a></li>
                 <li class="sidebar-item"><a href="index.html#contact" class="sidebar-link">联系我们</a></li>
                 <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+                <li class="sidebar-item"><a href="download.html" class="sidebar-link">下载</a></li>
             </ul>
         </nav>
     </aside>
@@ -179,7 +148,7 @@
 
 
     <!-- JavaScript 文件 -->
-    <script src="script.js"></script>
+    <script src="scripts/script.js"></script>
     <script>
         // 公约模态框
         document.addEventListener('DOMContentLoaded', function() {

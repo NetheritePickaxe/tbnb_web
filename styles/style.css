@@ -18,14 +18,15 @@ body {
     font-family: 'Unifont', sans-serif;
     line-height: 1.8;
     color: #fff;
-    background: linear-gradient(-45deg, #000000, #1a1a1a, #0a0a0a, #111111);
-    background-size: 400% 400%;
+    background-image: url('../images/A371B56EAFF542E3A1C3A7CBAEA9D2ED.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     background-attachment: fixed;
     overflow-x: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    animation: gradientShift 20s ease infinite;
     position: relative;
 }
 
@@ -51,11 +52,11 @@ body::before {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 60% 30%, rgba(255, 193, 7, 0.07) 0%, transparent 50%),
-        radial-gradient(circle at 90% 70%, rgba(255, 215, 0, 0.06) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 60% 30%, rgba(255, 193, 7, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 90% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
     animation: particleFloat 25s ease-in-out infinite, particlePulse 15s ease-in-out infinite alternate;
@@ -309,7 +310,7 @@ body::before {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), linear-gradient(to right, #111, #333);
+    background: rgba(0, 0, 0, 0.7);
     position: relative;
 }
 
@@ -497,7 +498,7 @@ section {
 
 /* 关于我们 */
 .about {
-    background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0d0d0d 100%);
+    background: rgba(0, 0, 0, 0.7);
     position: relative;
     overflow: hidden;
 }
@@ -963,7 +964,7 @@ section {
 
 /* 服务项目 */
 .services {
-    background: linear-gradient(135deg, #000000 0%, #121212 50%, #000000 100%);
+    background: rgba(0, 0, 0, 0.7);
     position: relative;
     overflow: hidden;
 }
@@ -1062,7 +1063,7 @@ section {
 
 /* 核心团队 */
 .team {
-    background: linear-gradient(135deg, #0a0a0a 0%, #131313 50%, #0b0b0b 100%);
+    background: rgba(0, 0, 0, 0.7);
     position: relative;
     overflow: hidden;
 }
@@ -1262,7 +1263,7 @@ section {
 
 /* 联系我们 */
 .contact {
-    background: linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%);
+    background: rgba(0, 0, 0, 0.7);
     position: relative;
     overflow: hidden;
 }
@@ -1511,7 +1512,7 @@ section {
 
 /* 页脚 */
 .footer {
-    background-color: #0a0a0a;
+    background: rgba(0, 0, 0, 0.7);
     padding: 60px 0 30px;
     border-top: 1px solid #222;
 }
@@ -1995,6 +1996,58 @@ section {
 .animate-on-scroll.animated {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* 公告栏样式 */
+.announcement {
+    padding: 4rem 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.announcement-content {
+    margin-top: 2rem;
+}
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.announcement-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.announcement-item:hover {
+    transform: translateY(-5px);
+    border-color: #ffd700;
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
+}
+
+.announcement-title {
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.announcement-date {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.announcement-text {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.announcement-actions {
+    margin-top: 2rem;
+    text-align: center;
 }
 
 /* 不同方向的入场动画 */

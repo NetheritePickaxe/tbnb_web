@@ -8,7 +8,7 @@ const querystring = require('querystring');
 const PORT = 8080;
 
 // 网站根目录
-const rootDir = path.join(__dirname);
+const rootDir = path.join(__dirname, '..');
 
 // 处理文件保存的函数
 function handleFileSave(req, res) {
@@ -43,6 +43,13 @@ function handleFileSave(req, res) {
             
             // 保存文件到网站根目录
             const filePath = path.join(rootDir, filename);
+            
+            // 确保目录存在
+            const dirPath = path.dirname(filePath);
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+            
             fs.writeFileSync(filePath, content, 'utf8');
             
             // 返回成功响应

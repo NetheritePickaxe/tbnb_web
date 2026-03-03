@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载页面 - TBNB</title>
+
+    <link rel="stylesheet" href="styles/style.css?v=1.1">
+    <style>
+        /* 探照灯效果 */
+        .spotlight {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 20%, rgba(255, 255, 255, 0.4) 40%, rgba(255, 255, 255, 0) 80%);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: overlay;
+            box-shadow: 0 0 100px rgba(255, 255, 255, 0.3);
+        }
+        
+        
+        /* 公约模态框 */
+        .convention-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .convention-content {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .convention-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .convention-text {
+            color: #fff;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .convention-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .convention-btn {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .agree-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .agree-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .disagree-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .disagree-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 上方标题栏 -->
+    <header class="top-header">
+        <div class="header-content">
+            <h1>TBNB <span>BACKROOMS</span></h1>
+            <!-- 在index.html的header部分 -->
+           
+        </div>
+    </header>
+    
+    <!-- 收缩式侧边栏 - 鼠标靠近弹出 -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="index.html" class="sidebar-link">首页</a></li>
+                <li class="sidebar-item"><a href="index.html#about" class="sidebar-link">关于我们</a></li>
+                <li class="sidebar-item"><a href="index.html#services" class="sidebar-link">服务器介绍</a></li>
+                <li class="sidebar-item"><a href="index.html#team" class="sidebar-link">核心团队</a></li>
+                <li class="sidebar-item"><a href="index.html#contact" class="sidebar-link">联系我们</a></li>
+                <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+                <li class="sidebar-item"><a href="download.html" class="sidebar-link">下载</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+
+    <!-- 下载区域 -->
+    <section class="hero" id="download">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">下载 <span>资源</span></h2>
+                <p class="hero-subtitle">点击下方按钮开始下载所需资源</p>
+                <a href="https://pan.vma.cc/pan/down.php/ccf49f5014d0fe53251de8f8c96a4992.zip" class="btn" download><span>立即下载</span></a>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <span class="icon"></span>
+    </button>
+
+
+
+    <!-- JavaScript 文件 -->
+    <script src="scripts/script.js"></script>
+    <script>
+        // 公约模态框
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查是否已经同意过
+            if (!localStorage.getItem('agreedToConvention')) {
+                // 创建模态框
+                const modal = document.createElement('div');
+                modal.classList.add('convention-modal');
+                modal.innerHTML = `
+                    <div class="convention-content">
+                        <h2 class="convention-title">🚪【TBNB】服务器公约2026 2.25</h2>
+                        <div class="convention-text">
+                            <p>0.整合包没模组是正常的，右键拾起物品</p>
+                            <p>1. 除OP外，玩家们的拆家、偷窃、PVP行为不受限制，且不限制掠夺与复仇，服务器内有多种道具可以保护你的基地不受侵犯，物资和基地请自行守护。</p>
+                            <p>1.1.禁止使用无法破坏的方块堵住交易所等区域，违者根据实际情况处理。</p>
+                            <p>2. 禁止任何影响游戏公平性的外挂/作弊模组/X光/灵魂出窍及恶意卡服、利用游戏BUG牟利等行为，违反者严惩。</p>
+                            <p>2.1.刷物品者、出图者视情况处罚，如情况严重将局部删档甚至全部删档，请自觉汇报！</p>
+                            <p>3. 玩家可自由组建组织及结盟，不受约束。</p>
+                            <p>▶ 禁止频繁发布组织广告（如刷屏），违者撤回+警告，情节严重者禁言。</p>
+                            <p>4. 群内服内禁止对任何人或组织的讥讽和谩骂，也禁止涉政、刷屏、色情及在任何群聊因原因（不限）对他人个人信息的泄漏和恶俗行为，发现者严惩，事态严重者永BA N。</p>
+                            <p>5.团队有些时候会不定时对服务器热修/更新，更新时将重启服务器，我们会事先通告。</p>
+                            <p>6.管理组保留对模糊行为的裁决权，尽量保证依照服规对违规处理，遇争议以当前解释为准：请注意，管理组处理事务对事不对人！</p>
+                            <p>7.赞助请找群管/群主，赞助后可在服内联系OP领取点卷（汇率1:100）</p>
+                            <p>8.目前部分出入口存在bug，如果遭遇无法进入/冒险模式的情况，请联系在线op。</p>
+                        </div>
+                        <div class="convention-buttons">
+                            <button class="convention-btn agree-btn">我同意</button>
+                            <button class="convention-btn disagree-btn">我不同意</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                // 同意按钮
+                const agreeBtn = modal.querySelector('.agree-btn');
+                agreeBtn.addEventListener('click', function() {
+                    localStorage.setItem('agreedToConvention', 'true');
+                    modal.remove();
+                    initSpotlight();
+                });
+                
+                // 不同意按钮
+                const disagreeBtn = modal.querySelector('.disagree-btn');
+                disagreeBtn.addEventListener('click', function() {
+                    window.location.href = 'index.html';
+                });
+            } else {
+                // 已经同意过，直接初始化探照灯
+                initSpotlight();
+            }
+        });
+        
+        // 探照灯效果
+        function initSpotlight() {
+            // 创建探照灯元素
+            const spotlight = document.createElement('div');
+            spotlight.classList.add('spotlight');
+            document.body.appendChild(spotlight);
+            
+            // 鼠标移动事件
+            document.addEventListener('mousemove', function(e) {
+                spotlight.style.left = e.clientX + 'px';
+                spotlight.style.top = e.clientY + 'px';
+            });
+            
+            // 触摸移动事件（移动设备支持）
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                spotlight.style.left = touch.clientX + 'px';
+                spotlight.style.top = touch.clientY + 'px';
+            });
+        }
+    </script>
+</body>
+</html>

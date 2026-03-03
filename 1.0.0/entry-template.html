@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - TBNB百科</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Showdown.js for Markdown parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
+    <!-- KaTeX JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/contrib/auto-render.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 条目页面专属样式 */
+        .entry-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .entry-header {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .entry-title {
+            color: #ffd700;
+            margin: 0 0 1rem 0;
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .entry-meta {
+            color: #999;
+            font-size: 1rem;
+        }
+        
+        .entry-content {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            line-height: 1.8;
+        }
+        
+        /* Markdown样式 */
+        .entry-content h1, 
+        .entry-content h2, 
+        .entry-content h3, 
+        .entry-content h4, 
+        .entry-content h5, 
+        .entry-content h6 {
+            color: #ffd700;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .entry-content a {
+            color: #ffd700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .entry-content a:hover {
+            color: #ffc107;
+            border-bottom-color: #ffc107;
+        }
+        
+        .entry-content code {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        .entry-content pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .entry-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        
+        .entry-content blockquote {
+            border-left: 4px solid #ffd700;
+            padding-left: 1rem;
+            color: #ccc;
+            margin: 1rem 0;
+        }
+        
+        .entry-content ul, 
+        .entry-content ol {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .entry-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .entry-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .entry-content th, 
+        .entry-content td {
+            padding: 0.8rem;
+            text-align: left;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .entry-content th {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            font-weight: 600;
+        }
+        
+        /* KaTeX样式 */
+        .katex {
+            font-size: 1.1em !important;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 上方标题栏 -->
+    <header class="top-header">
+        <div class="header-content">
+            <h1>TBNB <span>BACKROOMS</span></h1>
+        </div>
+    </header>
+    
+    <!-- 收缩式侧边栏 - 鼠标靠近弹出 -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="index.html" class="sidebar-link">首页</a></li>
+                <li class="sidebar-item"><a href="index.html#about" class="sidebar-link">关于我们</a></li>
+                <li class="sidebar-item"><a href="index.html#services" class="sidebar-link">服务器介绍</a></li>
+                <li class="sidebar-item"><a href="index.html#team" class="sidebar-link">核心团队</a></li>
+                <li class="sidebar-item"><a href="index.html#contact" class="sidebar-link">联系我们</a></li>
+                <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+        <div class="entry-container">
+            <!-- 返回按钮 -->
+            <a href="wiki.html" class="back-btn">返回百科首页</a>
+            
+            <!-- 条目头部 -->
+            <div class="entry-header">
+                <h1 class="entry-title">{{title}}</h1>
+                <div class="entry-meta">
+                    <span>分类: {{category}}</span> | 
+                    <span>创建时间: {{createdAt}}</span>
+                </div>
+            </div>
+            
+            <!-- 条目内容 -->
+            <div class="entry-content" id="entryContent">
+                {{content}}
+            </div>
+        </div>
+    </main>
+    
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <span class="icon"></span>
+    </button>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>TBNB BACKROOMS</h3>
+                    <p>专业的服务器团队，为您的游戏保驾护航</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="index.html#home">首页</a></li>
+                        <li><a href="index.html#about">关于我们</a></li>
+                        <li><a href="index.html#services">服务项目</a></li>
+                        <li><a href="index.html#team">核心团队</a></li>
+                        <li><a href="index.html#contact">联系我们</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TBNB BACKROOMS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript 文件 -->
+    <script src="script.js"></script>
+    <script>
+        // 渲染KaTeX公式
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // 检查KaTeX和auto-render是否可用
+                if (typeof katex !== 'undefined' && typeof renderMathInElement !== 'undefined') {
+                    // 使用全局的renderMathInElement函数（来自auto-render.min.js）
+                    renderMathInElement(document.getElementById('entryContent'), {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false, // 忽略渲染错误
+                        output: 'htmlAndMathml' // 输出HTML和MathML
+                    });
+                }
+            } catch (error) {
+                console.error('KaTeX渲染失败:', error);
+            }
+        });
+    </script>
+</body>
+</html>

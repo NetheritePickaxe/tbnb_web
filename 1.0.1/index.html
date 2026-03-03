@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBNB-后室永无止境！</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 上方标题栏 -->
+    <header class="top-header">
+        <div class="header-content">
+            <h1>TBNB <span>BACKROOMS</span></h1>
+            <!-- 在index.html的header部分 -->
+            <div class="header-actions">
+                <button class="login-btn" onclick="window.location.href='wiki.html'">登录/百科</button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 收缩式侧边栏 - 鼠标靠近弹出 -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="#home" class="sidebar-link">首页</a></li>
+                <li class="sidebar-item"><a href="#about" class="sidebar-link">关于我们</a></li>
+                <li class="sidebar-item"><a href="#services" class="sidebar-link">服务器介绍</a></li>
+                <li class="sidebar-item"><a href="#team" class="sidebar-link">核心团队</a></li>
+                <li class="sidebar-item"><a href="#contact" class="sidebar-link">联系我们</a></li>
+                <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+
+    <!-- 英雄区域 -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">持续游戏 <span>创新</span>，保持良好 <span>质量</span></h2>
+                <p class="hero-subtitle">专业的服务器团队，为您的游戏体验保驾护航</p>
+                <a href="#services" class="btn"><span>了解更多</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">关于<span>我们</span></h2>
+                <p class="section-subtitle">专业、创新、诚信、共赢</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>TBNB BACKROOMS</h3>
+                    <p>成立于2024年，是一个专注于提供高质量后室游戏的服务器团队。我们拥有一支经验丰富、技术精湛的专业团队，致力于为玩家提供稳定、安全、流畅的游戏体验。</p>
+                    <p>几年来，我们始终坚持以玩家为中心，以创新为驱动力，不断提升服务器质量和技术水平。我们的团队遍布各个领域，包括服务器搭建、网站搭建、模组制作等领域。</p>
+                    <p>我们的使命是通过技术创新，帮助玩家提升游戏体验，实现可持续发展。</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="2">0</div>
+                        <div class="stat-label">年行业经验</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="server-status">检查中...</div>
+                        <div class="stat-label">服务器状态</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="78">0</div>
+                        <div class="stat-label">% 客户满意度</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="2500">0</div>
+                        <div class="stat-label">小时+ 服务器运行时间</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务项目 -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">我们的<span>服务器</span></h2>
+                <p class="section-subtitle">专业的服务器，为您的游戏体验保驾护航</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-item">
+                    <h3 class="service-title">核心</h3>
+                    <p class="service-description">土豆</p>
+                </div>
+                <div class="service-item">
+                    <h3 class="service-title">内存</h3>
+                    <p class="service-description">土豆</p>
+                </div>
+                <div class="service-item">
+                    <h3 class="service-title">显卡</h3>
+                    <p class="service-description">土豆</p>
+                </div>
+                <div class="service-item">
+                    <h3 class="service-title">硬盘</h3>
+                    <p class="service-description">土豆</p>
+                </div>
+                <div class="service-item">
+                    <h3 class="service-title">游戏设计</h3>
+                    <p class="service-description">专业的游戏设计，打造独特的游戏体验。</p>
+                </div>
+                <div class="service-item">
+                    <h3 class="service-title">技术支持</h3>
+                    <p class="service-description">提供20小时的技术支持服务，确保服务器稳定运行。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心团队 -->
+    <section class="team" id="team">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">核心<span>团队</span></h2>
+                <p class="section-subtitle">专业的团队，为您提供优质的服务</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('柠檬头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">酸柠檬serendipity</h3>
+                        <p class="member-position">建筑、美工、策划、代码</p>
+                        <p class="member-bio">bilibili百大不知名UP主，擅长游戏设计和策划。</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('合金头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">pickaxe_e</h3>
+                        <p class="member-position">服务器支持、整合包制作、插件整合</p>
+                        <p class="member-bio">擅长寻找合适的土豆。</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('南宫头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">新史低 南宫墨铭</h3>
+                        <p class="member-position">美工、玩家沟通、服务器运营</p>
+                        <p class="member-bio">不买立减100％</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('steve头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Steve58722</h3>
+                        <p class="member-position">人</p>
+                        <p class="member-bio">不定时袭击pickexe</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('忆霜头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">忆霜frosty</h3>
+                        <p class="member-position">代码技术支持</p>
+                        <p class="member-bio">无</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('CHlongjun头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">CHlongjun</h3>
+                        <p class="member-position">本网站制作者、添乱者、屎山代码制造者</p>
+                        <p class="member-bio">擅长写屎山代码</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('绿sans头像1.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Gre_Iaos</h3>
+                        <p class="member-position">建筑</p>
+                        <p class="member-bio">建设组最正常的人</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('心碎头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">心碎碎</h3>
+                        <p class="member-position">那个叫南宫墨铭的⑨是baka</p>
+                        <p class="member-bio">特别鸣谢</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 加入我们 -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">加入<span>我们</span></h2>
+                <p class="section-subtitle">欢迎加入我们的QQ群，与志同道合的朋友一起交流</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item qq-group-row">
+                        <div class="contact-text">
+                            <h3>QQ群号</h3>
+                            <p>995079691</p>
+                        </div>
+                        <div class="contact-text">
+                            <h3>群规</h3>
+                            <p>遵守群规，文明交流，禁止广告</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>加入QQ群</h3>
+                    <div class="qq-group-info">
+                        <p>扫描下方二维码或搜索群号加入我们的QQ群，获取更多信息和资源。</p>
+                        <div class="qq-qrcode">
+                            <img src="QQ群加入二维码.jpg" alt="QQ群加入二维码" style="width: auto; height: auto; max-width: 300px; max-height: 300px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); transition: all 0.3s ease; margin: 0 auto; display: block;">
+                        </div>
+                        <button type="button" class="btn" onclick="window.open('https://jq.qq.com/?_wv=1027&k=your_key', '_blank')">
+                            <span>立即加入</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <span class="icon"></span>
+    </button>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>TBNB BACKROOMS</h3>
+                    <p>专业的服务器团队，为您的游戏保驾护航</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#about">关于我们</a></li>
+                        <li><a href="#services">服务项目</a></li>
+                        <li><a href="#team">核心团队</a></li>
+                        <li><a href="#contact">联系我们</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TBNB BACKROOMS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    </main>
+
+    <!-- JavaScript 文件 -->
+    <script src="script.js"></script>
+    <script>
+        // 检查服务器状态
+        function checkServerStatus() {
+            const statusElement = document.getElementById('server-status');
+            
+            // 显示检查中状态
+            statusElement.textContent = '检查中...';
+            statusElement.style.color = '#ffd700'; // 金色
+            
+            // 尝试连接到服务器域名
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://tbnb.fun', true);
+            xhr.timeout = 5000; // 5秒超时
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    // 服务器可访问
+                    statusElement.textContent = '在线';
+                    statusElement.style.color = '#4CAF50'; // 绿色
+                } else {
+                    // 服务器返回错误状态
+                    statusElement.textContent = '离线';
+                    statusElement.style.color = '#f44336'; // 红色
+                }
+            };
+            
+            xhr.onerror = function() {
+                // 连接错误
+                statusElement.textContent = '离线';
+                statusElement.style.color = '#f44336'; // 红色
+            };
+            
+            xhr.ontimeout = function() {
+                // 连接超时
+                statusElement.textContent = '离线';
+                statusElement.style.color = '#f44336'; // 红色
+            };
+            
+            xhr.send();
+        }
+        
+        // 页面加载时检查服务器状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkServerStatus();
+            
+            // 每30秒检查一次服务器状态
+            setInterval(checkServerStatus, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TBNB-后室永无止境！</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -67,8 +69,8 @@
                         <div class="stat-label">年行业经验</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="server-status">检查中...</div>
-                        <div class="stat-label">服务器状态</div>
+                        <div class="stat-number" data-target="150">0</div>
+                        <div class="stat-label">+ 玩家数量</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" data-target="78">0</div>
@@ -152,14 +154,6 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <div class="member-image" style="background-image: url('steve头像.jpg');"></div>
-                    <div class="member-info">
-                        <h3 class="member-name">Steve58722</h3>
-                        <p class="member-position">人</p>
-                        <p class="member-bio">不定时袭击pickexe</p>
-                    </div>
-                </div>
-                <div class="team-member">
                     <div class="member-image" style="background-image: url('忆霜头像.jpg');"></div>
                     <div class="member-info">
                         <h3 class="member-name">忆霜frosty</h3>
@@ -189,6 +183,14 @@
                         <h3 class="member-name">心碎碎</h3>
                         <p class="member-position">那个叫南宫墨铭的⑨是baka</p>
                         <p class="member-bio">特别鸣谢</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image" style="background-image: url('steven头像.jpg');"></div>
+                    <div class="member-info">
+                        <h3 class="member-name">Steve58722</h3>
+                        <p class="member-position">人</p>
+                        <p class="member-bio">不定时袭击pickexe</p>
                     </div>
                 </div>
             </div>
@@ -265,54 +267,5 @@
 
     <!-- JavaScript 文件 -->
     <script src="script.js"></script>
-    <script>
-        // 检查服务器状态
-        function checkServerStatus() {
-            const statusElement = document.getElementById('server-status');
-            
-            // 显示检查中状态
-            statusElement.textContent = '检查中...';
-            statusElement.style.color = '#ffd700'; // 金色
-            
-            // 尝试连接到服务器域名
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'https://tbnb.fun', true);
-            xhr.timeout = 5000; // 5秒超时
-            
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    // 服务器可访问
-                    statusElement.textContent = '在线';
-                    statusElement.style.color = '#4CAF50'; // 绿色
-                } else {
-                    // 服务器返回错误状态
-                    statusElement.textContent = '离线';
-                    statusElement.style.color = '#f44336'; // 红色
-                }
-            };
-            
-            xhr.onerror = function() {
-                // 连接错误
-                statusElement.textContent = '离线';
-                statusElement.style.color = '#f44336'; // 红色
-            };
-            
-            xhr.ontimeout = function() {
-                // 连接超时
-                statusElement.textContent = '离线';
-                statusElement.style.color = '#f44336'; // 红色
-            };
-            
-            xhr.send();
-        }
-        
-        // 页面加载时检查服务器状态
-        document.addEventListener('DOMContentLoaded', function() {
-            checkServerStatus();
-            
-            // 每30秒检查一次服务器状态
-            setInterval(checkServerStatus, 30000);
-        });
-    </script>
 </body>
 </html>

@@ -1047,18 +1047,10 @@
                         loginData.failedAttempts = (loginData.failedAttempts || 0) + 1;
                         
                         // 根据失败次数设置锁定时间
-                        if (loginData.failedAttempts >= 15) {
+                        if (loginData.failedAttempts >= 5) {
                             // 永久锁定
                             loginData.lockedUntil = -1;
                             alert('账户已被永久锁定，请使用密匙解锁');
-                        } else if (loginData.failedAttempts >= 10) {
-                            // 锁定5分钟
-                            loginData.lockedUntil = Date.now() + 5 * 60 * 1000;
-                            alert('账户已被锁定5分钟');
-                        } else if (loginData.failedAttempts >= 3) {
-                            // 锁定1分钟
-                            loginData.lockedUntil = Date.now() + 1 * 60 * 1000;
-                            alert('账户已被锁定1分钟');
                         } else {
                             alert('用户名或密码错误！');
                         }

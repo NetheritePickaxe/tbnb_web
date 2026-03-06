@@ -983,6 +983,39 @@
             const loginForm = document.getElementById('loginForm');
             const announcementManagerBtn = document.getElementById('announcementManagerBtn');
             
+            // 检查登录状态和锁定状态
+            function checkLoginStatus() {
+                const loginData = JSON.parse(localStorage.getItem('loginData') || '{}');
+                const now = Date.now();
+                
+                // 检查是否被锁定
+                if (loginData.lockedUntil) {
+                    if (loginData.lockedUntil > now) {
+                        const remainingTime = Math.ceil((loginData.lockedUntil - now) / 1000);
+                        alert(`账户已被锁定，剩余 ${remainingTime} 秒`);
+                        return false;
+                    } else if (loginData.lockedUntil === -1) {
+                        // 永久锁定
+                        const key = prompt('账户已被永久锁定，请输入解锁密匙：');
+                        if (key === '6YW45p+g5qqsc2VyZW5kaXBpdHk=') {
+                            // 解锁
+                            localStorage.removeItem('loginData');
+                            alert('账户已解锁');
+                            return true;
+                        } else {
+                            alert('密匙错误，账户仍然锁定');
+                            return false;
+                        }
+                    } else {
+                        // 锁定时间已过，重置
+                        loginData.failedAttempts = 0;
+                        loginData.lockedUntil = null;
+                        localStorage.setItem('loginData', JSON.stringify(loginData));
+                    }
+                }
+                return true;
+            }
+            
             if (closeLoginModal) {
                 closeLoginModal.addEventListener('click', function() {
                     loginModal.classList.remove('active');
@@ -993,16 +1026,44 @@
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
+                    // 检查登录状态
+                    if (!checkLoginStatus()) {
+                        return;
+                    }
+                    
                     const username = document.getElementById('username').value.trim();
                     const password = document.getElementById('password').value.trim();
                     
                     if (username === 'tbnb' && password === 'tbnb123') {
+                        // 登录成功，重置失败次数
+                        localStorage.removeItem('loginData');
                         localStorage.setItem('announcement_logged_in', 'true');
                         loginModal.classList.remove('active');
                         announcementManagerBtn.style.display = 'block';
                         showAnnouncementManager();
                     } else {
-                        alert('用户名或密码错误！');
+                        // 登录失败，记录失败次数
+                        const loginData = JSON.parse(localStorage.getItem('loginData') || '{}');
+                        loginData.failedAttempts = (loginData.failedAttempts || 0) + 1;
+                        
+                        // 根据失败次数设置锁定时间
+                        if (loginData.failedAttempts >= 15) {
+                            // 永久锁定
+                            loginData.lockedUntil = -1;
+                            alert('账户已被永久锁定，请使用密匙解锁');
+                        } else if (loginData.failedAttempts >= 10) {
+                            // 锁定5分钟
+                            loginData.lockedUntil = Date.now() + 5 * 60 * 1000;
+                            alert('账户已被锁定5分钟');
+                        } else if (loginData.failedAttempts >= 3) {
+                            // 锁定1分钟
+                            loginData.lockedUntil = Date.now() + 1 * 60 * 1000;
+                            alert('账户已被锁定1分钟');
+                        } else {
+                            alert('用户名或密码错误！');
+                        }
+                        
+                        localStorage.setItem('loginData', JSON.stringify(loginData));
                     }
                 });
             }

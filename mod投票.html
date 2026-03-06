@@ -655,14 +655,7 @@
         // 渲染投票列表
         function renderVotes() {
             const voteList = document.getElementById('vote-list');
-            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true' || localStorage.getItem('userLoggedIn') === 'true';
-            
-            if (!isLoggedIn) {
-                voteList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 2rem;">请先登录后查看投票</p>';
-                return;
-            }
-            
-            const votes = JSON.parse(localStorage.getItem('votes') || '[]');
+            const votes = JSON.parse(localStorage.getItem('votes'));
             const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
             
             if (votes.length === 0) {

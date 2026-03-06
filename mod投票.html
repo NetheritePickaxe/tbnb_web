@@ -662,7 +662,7 @@
                 return;
             }
             
-            const votes = JSON.parse(localStorage.getItem('votes'));
+            const votes = JSON.parse(localStorage.getItem('votes') || '[]');
             const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
             
             if (votes.length === 0) {

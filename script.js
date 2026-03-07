@@ -17,7 +17,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // 数字动画效果
 function animateNumbers() {
-    const numberElements = document.querySelectorAll('.stat-number:not(.animated)');
+    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time)');
     
     numberElements.forEach(element => {
         // 添加标记，防止重复动画
@@ -38,6 +38,27 @@ function animateNumbers() {
             }
         }, 16);
     });
+}
+
+// 服务器运行时间计时
+function startServerRunTime() {
+    const serverRunTimeElement = document.getElementById('server-run-time');
+    if (!serverRunTimeElement) return;
+    
+    // 服务器启动时间：2024年1月1日凌晨1点
+    const serverStartTime = new Date('2024-01-01T01:00:00');
+    
+    function updateRunTime() {
+        const now = new Date();
+        const runTimeInSeconds = Math.floor((now - serverStartTime) / 1000);
+        serverRunTimeElement.textContent = runTimeInSeconds;
+    }
+    
+    // 立即更新一次
+    updateRunTime();
+    
+    // 每秒更新一次
+    setInterval(updateRunTime, 1000);
 }
 
 // 视差滚动效果
@@ -368,6 +389,9 @@ function initPage() {
     
     // 执行页面加载动画
     initPageLoadAnimation();
+    
+    // 启动服务器运行时间计时
+    startServerRunTime();
 }
 
 // 页面加载完成后初始化

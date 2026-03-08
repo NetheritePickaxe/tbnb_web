@@ -714,13 +714,28 @@
             <input type="hidden" id="banUsername">
             <div class="ban-form-group">
                 <label for="banDuration">禁言时间</label>
-                <select id="banDuration">
+                <select id="banDuration" onchange="toggleCustomBanTime()">
                     <option value="3600000">1小时</option>
                     <option value="86400000">1天</option>
                     <option value="604800000">7天</option>
                     <option value="2592000000">30天</option>
+                    <option value="custom">自定义</option>
                     <option value="-1">永久</option>
                 </select>
+            </div>
+            <div id="customBanTime" style="display: none; margin-top: 1rem;">
+                <div class="ban-form-group">
+                    <label for="customBanValue">禁言时长</label>
+                    <input type="number" id="customBanValue" placeholder="输入时长" min="1">
+                </div>
+                <div class="ban-form-group">
+                    <label for="customBanUnit">时间单位</label>
+                    <select id="customBanUnit">
+                        <option value="minutes">分钟</option>
+                        <option value="hours">小时</option>
+                        <option value="days">天</option>
+                    </select>
+                </div>
             </div>
             <div class="ban-buttons">
                 <button class="btn" onclick="closeBanModal()">取消</button>
@@ -1357,10 +1372,47 @@
             }, 300);
         }
         
+        // 切换自定义禁言时间显示
+        function toggleCustomBanTime() {
+            const banDuration = document.getElementById('banDuration').value;
+            const customBanTime = document.getElementById('customBanTime');
+            
+            if (banDuration === 'custom') {
+                customBanTime.style.display = 'block';
+            } else {
+                customBanTime.style.display = 'none';
+            }
+        }
+        
         // 禁言用户
         function banUser() {
             const username = document.getElementById('banUsername').value;
-            const duration = parseInt(document.getElementById('banDuration').value);
+            let duration = parseInt(document.getElementById('banDuration').value);
+            
+            // 处理自定义禁言时间
+            if (document.getElementById('banDuration').value === 'custom') {
+                const customValue = parseInt(document.getElementById('customBanValue').value);
+                const customUnit = document.getElementById('customBanUnit').value;
+                
+                if (!customValue || customValue < 1) {
+                    alert('请输入有效的禁言时长');
+                    return;
+                }
+                
+                // 根据单位计算毫秒数
+                switch (customUnit) {
+                    case 'minutes':
+                        duration = customValue * 60 * 1000;
+                        break;
+                    case 'hours':
+                        duration = customValue * 60 * 60 * 1000;
+                        break;
+                    case 'days':
+                        duration = customValue * 24 * 60 * 60 * 1000;
+                        break;
+                }
+            }
+            
             const expiryTime = duration === -1 ? -1 : Date.now() + duration;
             
             let mutedUsers = JSON.parse(localStorage.getItem('mutedUsers'));

@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛 - TBNB</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 论坛页面专属样式 */
+        .forum-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .user-info span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .admin-controls {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+        }
+        
+        .admin-controls h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
+        .ban-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .ban-form input {
+            padding: 0.5rem;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            background: rgba(26, 26, 26, 0.8);
+            color: #fff;
+        }
+        
+        .ban-form button {
+            padding: 0.5rem 1rem;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ban-form button:hover {
+            background: #ffc107;
+            transform: translateY(-2px);
+        }
+        
+        .banned-users {
+            margin-top: 1rem;
+        }
+        
+        .banned-user {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .unban-btn {
+            padding: 0.3rem 0.8rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .unban-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .post-form {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .post-form h2 {
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            background: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ffc107 100%);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .posts-container {
+            margin-top: 2rem;
+        }
+        
+        .post {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid #333;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .post-title {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .post-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+        
+        .post-author {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .post-content {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .comments-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333;
+        }
+        
+        .comments-section h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            background: rgba(26, 26, 26, 0.8);
+            color: #fff;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 1rem;
+        }
+        
+        .comments-list {
+            margin-top: 1.5rem;
+        }
+        
+        .comment {
+            background: rgba(26, 26, 26, 0.5);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-author {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .comment-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .comment-content {
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .login-form {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+        
+        .login-form h2 {
+            color: #ffd700;
+            margin-bottom: 2rem;
+        }
+        
+        .login-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ffd700;
+        }
+        
+        .login-tab {
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .login-tab.active {
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .login-panel {
+            display: none;
+        }
+        
+        .login-panel.active {
+            display: block;
+        }
+        
+        .error-message {
+            color: #f44336;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 上方标题栏 -->
+    <header class="top-header">
+        <div class="header-content">
+            <h1>TBNB <span>BACKROOMS</span></h1>
+            <!-- 在index.html的header部分 -->
+            <div class="header-buttons">
+                <a href="下载.html" class="btn">下载</a>
+                <button class="btn" onclick="showLoginModal()">登录</button>
+                <button class="btn" id="adminPanelBtn" onclick="showAdminPanel()" style="display: none;">公告管理</button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 收缩式侧边栏 - 鼠标靠近弹出 -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="index.html" class="sidebar-link">首页</a></li>
+                <li class="sidebar-item"><a href="index.html#about" class="sidebar-link">关于我们</a></li>
+                <li class="sidebar-item"><a href="index.html#services" class="sidebar-link">服务器介绍</a></li>
+                <li class="sidebar-item"><a href="index.html#team" class="sidebar-link">核心团队</a></li>
+                <li class="sidebar-item"><a href="index.html#contact" class="sidebar-link">联系我们</a></li>
+                <li class="sidebar-item"><a href="wiki.html" class="sidebar-link" onclick="alert('正在维护'); return false;">百科</a></li>
+                <li class="sidebar-item"><a href="mod投票.html" class="sidebar-link">Mod投票</a></li>
+                <li class="sidebar-item"><a href="论坛.html" class="sidebar-link">论坛</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+        <!-- 论坛容器 -->
+        <div class="forum-container">
+            <!-- 用户信息 -->
+            <div class="user-info">
+                <span id="userStatus">未登录</span>
+                <button id="loginBtn" class="btn" onclick="showLoginModal()">登录</button>
+                <button id="logoutBtn" class="btn" onclick="logout()" style="display: none;">退出</button>
+            </div>
+            
+            <!-- 管理员控制面板 -->
+            <div id="adminControls" class="admin-controls" style="display: none;">
+                <h3>管理员控制面板</h3>
+                <div class="ban-form">
+                    <input type="text" id="banUsername" placeholder="输入要封禁的用户名">
+                    <button onclick="banUser()">封禁用户</button>
+                </div>
+                <div class="banned-users" id="bannedUsersList">
+                    <h4>已封禁用户</h4>
+                    <div id="bannedUsers"></div>
+                </div>
+            </div>
+            
+            <!-- 发帖表单 -->
+            <div id="postForm" class="post-form" style="display: none;">
+                <h2>发布新帖子</h2>
+                <div class="form-group">
+                    <label for="postTitle">标题</label>
+                    <input type="text" id="postTitle" placeholder="请输入帖子标题">
+                </div>
+                <div class="form-group">
+                    <label for="postContent">内容</label>
+                    <textarea id="postContent" placeholder="请输入帖子内容"></textarea>
+                </div>
+                <button class="btn" onclick="createPost()">发布帖子</button>
+            </div>
+            
+            <!-- 帖子列表 -->
+            <div class="posts-container" id="postsContainer">
+                <h2 style="color: #ffd700; margin-bottom: 2rem;">论坛帖子</h2>
+                <div id="postsList"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2>登录</h2>
+            <div class="login-tabs">
+                <div class="login-tab active" onclick="switchLoginTab('user')">用户登录</div>
+                <div class="login-tab" onclick="switchLoginTab('admin')">管理员登录</div>
+            </div>
+            
+            <!-- 用户登录面板 -->
+            <div id="userLoginPanel" class="login-panel active">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码">
+                </div>
+                <button class="btn" onclick="login('user')">登录</button>
+            </div>
+            
+            <!-- 管理员登录面板 -->
+            <div id="adminLoginPanel" class="login-panel">
+                <div class="form-group">
+                    <label for="adminUsername">管理员用户名</label>
+                    <input type="text" id="adminUsername" placeholder="请输入管理员用户名">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">管理员密码</label>
+                    <input type="password" id="adminPassword" placeholder="请输入管理员密码">
+                </div>
+                <button class="btn" onclick="login('admin')">登录</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <span class="icon"></span>
+    </button>
+    
+    <!-- JavaScript 文件 -->
+    <script src="script.js"></script>
+    <script>
+        // 初始化数据
+        function initData() {
+            // 初始化帖子数据
+            if (!localStorage.getItem('posts')) {
+                localStorage.setItem('posts', JSON.stringify([]));
+            }
+            
+            // 初始化封禁用户数据
+            if (!localStorage.getItem('bannedUsers')) {
+                localStorage.setItem('bannedUsers', JSON.stringify([]));
+            }
+        }
+        
+        // 显示登录模态框
+        function showLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.display = 'flex';
+            setTimeout(() => {
+                loginModal.style.opacity = '1';
+                loginModal.style.visibility = 'visible';
+            }, 10);
+        }
+        
+        // 关闭登录模态框
+        function closeLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            loginModal.style.opacity = '0';
+            loginModal.style.visibility = 'hidden';
+            setTimeout(() => {
+                loginModal.style.display = 'none';
+            }, 300);
+        }
+        
+        // 切换登录标签
+        function switchLoginTab(tab) {
+            // 移除所有标签的active类
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 移除所有面板的active类
+            document.querySelectorAll('.login-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // 添加当前标签和面板的active类
+            document.querySelector(`.login-tab[onclick="switchLoginTab('${tab}')"]`).classList.add('active');
+            document.getElementById(`${tab}LoginPanel`).classList.add('active');
+        }
+        
+        // 登录功能
+        function login(type) {
+            if (type === 'user') {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                if (username && password) {
+                    // 检查是否被封禁
+                    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+                    if (bannedUsers.includes(username)) {
+                        alert('您的账户已被封禁，无法登录');
+                        return;
+                    }
+                    
+                    // 简单的用户登录逻辑，实际应用中应该有更安全的验证
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    updateUserStatus();
+                    closeLoginModal();
+                } else {
+                    alert('请输入用户名和密码');
+                }
+            } else if (type === 'admin') {
+                const username = document.getElementById('adminUsername').value.trim();
+                const password = document.getElementById('adminPassword').value.trim();
+                
+                // 管理员登录验证
+                if (username === 'admin' && password === 'admin123') {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    updateUserStatus();
+                    closeLoginModal();
+                } else {
+                    alert('管理员用户名或密码错误');
+                }
+            }
+        }
+        
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('username');
+            updateUserStatus();
+        }
+        
+        // 更新用户状态
+        function updateUserStatus() {
+            const userStatus = document.getElementById('userStatus');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const postForm = document.getElementById('postForm');
+            const adminControls = document.getElementById('adminControls');
+            
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            
+            if (isAdminLoggedIn) {
+                userStatus.textContent = '管理员已登录';
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                postForm.style.display = 'block';
+                adminControls.style.display = 'block';
+                renderBannedUsers();
+            } else if (isUserLoggedIn) {
+                const username = localStorage.getItem('username');
+                userStatus.textContent = `用户 ${username} 已登录`;
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                postForm.style.display = 'block';
+                adminControls.style.display = 'none';
+            } else {
+                userStatus.textContent = '未登录';
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                postForm.style.display = 'none';
+                adminControls.style.display = 'none';
+            }
+            
+            // 重新渲染帖子
+            renderPosts();
+        }
+        
+        // 创建帖子
+        function createPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            
+            if (!title || !content) {
+                alert('请输入标题和内容');
+                return;
+            }
+            
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            let author;
+            if (isAdminLoggedIn) {
+                author = '管理员';
+            } else if (isUserLoggedIn) {
+                author = localStorage.getItem('username');
+            } else {
+                alert('请先登录');
+                return;
+            }
+            
+            const posts = JSON.parse(localStorage.getItem('posts'));
+            const newPost = {
+                id: Date.now().toString(),
+                title: title,
+                content: content,
+                author: author,
+                createdAt: new Date().toISOString(),
+                comments: []
+            };
+            
+            posts.unshift(newPost);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            
+            // 清空表单
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            
+            // 重新渲染帖子
+            renderPosts();
+        }
+        
+        // 渲染帖子列表
+        function renderPosts() {
+            const postsList = document.getElementById('postsList');
+            const posts = JSON.parse(localStorage.getItem('posts'));
+            
+            if (posts.length === 0) {
+                postsList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 2rem;">暂无帖子，快来发布第一个帖子吧！</p>';
+                return;
+            }
+            
+            postsList.innerHTML = '';
+            
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <h3 class="post-title">${post.title}</h3>
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-author">${post.author}</span>
+                        <span class="post-time">${new Date(post.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-actions">
+                        ${canDeletePost(post.author) ? `<button class="action-btn delete-btn" onclick="deletePost('${post.id}')">删除帖子</button>` : ''}
+                    </div>
+                    <div class="comments-section">
+                        <h3>评论</h3>
+                        <div class="comment-form">
+                            <textarea id="commentContent-${post.id}" placeholder="写下你的评论..."></textarea>
+                            <button class="btn" onclick="addComment('${post.id}')">发布评论</button>
+                        </div>
+                        <div class="comments-list" id="comments-${post.id}"></div>
+                    </div>
+                `;
+                postsList.appendChild(postElement);
+                
+                // 渲染评论
+                renderComments(post.id, post.comments);
+            });
+        }
+        
+        // 渲染评论
+        function renderComments(postId, comments) {
+            const commentsList = document.getElementById(`comments-${postId}`);
+            
+            if (comments.length === 0) {
+                commentsList.innerHTML = '<p style="text-align: center; color: #999; margin-top: 1rem;">暂无评论，快来发表你的看法吧！</p>';
+                return;
+            }
+            
+            commentsList.innerHTML = '';
+            
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.author}</span>
+                        <span class="comment-time">${new Date(comment.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div class="comment-content">${comment.content}</div>
+                    <div class="comment-actions">
+                        ${canDeleteComment(comment.author) ? `<button class="action-btn delete-btn" onclick="deleteComment('${postId}', '${comment.id}')">删除评论</button>` : ''}
+                    </div>
+                `;
+                commentsList.appendChild(commentElement);
+            });
+        }
+        
+        // 添加评论
+        function addComment(postId) {
+            const commentContent = document.getElementById(`commentContent-${postId}`).value.trim();
+            
+            if (!commentContent) {
+                alert('请输入评论内容');
+                return;
+            }
+            
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            
+            let author;
+            if (isAdminLoggedIn) {
+                author = '管理员';
+            } else if (isUserLoggedIn) {
+                author = localStorage.getItem('username');
+            } else {
+                alert('请先登录');
+                return;
+            }
+            
+            const posts = JSON.parse(localStorage.getItem('posts'));
+            const postIndex = posts.findIndex(post => post.id === postId);
+            
+            if (postIndex !== -1) {
+                const newComment = {
+                    id: Date.now().toString(),
+                    content: commentContent,
+                    author: author,
+                    createdAt: new Date().toISOString()
+                };
+                
+                posts[postIndex].comments.push(newComment);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                
+                // 清空评论输入框
+                document.getElementById(`commentContent-${postId}`).value = '';
+                
+                // 重新渲染评论
+                renderComments(postId, posts[postIndex].comments);
+            }
+        }
+        
+        // 删除帖子
+        function deletePost(postId) {
+            if (confirm('确定要删除这个帖子吗？此操作不可恢复。')) {
+                const posts = JSON.parse(localStorage.getItem('posts'));
+                const filteredPosts = posts.filter(post => post.id !== postId);
+                localStorage.setItem('posts', JSON.stringify(filteredPosts));
+                renderPosts();
+            }
+        }
+        
+        // 删除评论
+        function deleteComment(postId, commentId) {
+            if (confirm('确定要删除这个评论吗？此操作不可恢复。')) {
+                const posts = JSON.parse(localStorage.getItem('posts'));
+                const postIndex = posts.findIndex(post => post.id === postId);
+                
+                if (postIndex !== -1) {
+                    posts[postIndex].comments = posts[postIndex].comments.filter(comment => comment.id !== commentId);
+                    localStorage.setItem('posts', JSON.stringify(posts));
+                    renderComments(postId, posts[postIndex].comments);
+                }
+            }
+        }
+        
+        // 检查是否可以删除帖子
+        function canDeletePost(author) {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            
+            return isAdminLoggedIn || (isUserLoggedIn && author === username);
+        }
+        
+        // 检查是否可以删除评论
+        function canDeleteComment(author) {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            
+            return isAdminLoggedIn || (isUserLoggedIn && author === username);
+        }
+        
+        // 封禁用户
+        function banUser() {
+            const username = document.getElementById('banUsername').value.trim();
+            
+            if (!username) {
+                alert('请输入要封禁的用户名');
+                return;
+            }
+            
+            if (username === '管理员') {
+                alert('不能封禁管理员账户');
+                return;
+            }
+            
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+            
+            if (bannedUsers.includes(username)) {
+                alert('该用户已经被封禁');
+                return;
+            }
+            
+            bannedUsers.push(username);
+            localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+            
+            // 清空输入框
+            document.getElementById('banUsername').value = '';
+            
+            // 重新渲染封禁用户列表
+            renderBannedUsers();
+            
+            alert(`用户 ${username} 已被封禁`);
+        }
+        
+        // 解封用户
+        function unbanUser(username) {
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+            const filteredUsers = bannedUsers.filter(user => user !== username);
+            localStorage.setItem('bannedUsers', JSON.stringify(filteredUsers));
+            renderBannedUsers();
+            alert(`用户 ${username} 已被解封`);
+        }
+        
+        // 渲染封禁用户列表
+        function renderBannedUsers() {
+            const bannedUsersContainer = document.getElementById('bannedUsers');
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+            
+            if (bannedUsers.length === 0) {
+                bannedUsersContainer.innerHTML = '<p style="color: #ccc;">暂无被封禁的用户</p>';
+                return;
+            }
+            
+            bannedUsersContainer.innerHTML = '';
+            
+            bannedUsers.forEach(username => {
+                const userElement = document.createElement('div');
+                userElement.className = 'banned-user';
+                userElement.innerHTML = `
+                    <span>${username}</span>
+                    <button class="unban-btn" onclick="unbanUser('${username}')">解封</button>
+                `;
+                bannedUsersContainer.appendChild(userElement);
+            });
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initData();
+            updateUserStatus();
+            renderPosts();
+            
+            // 关闭登录模态框
+            document.getElementById('closeLoginModal').addEventListener('click', closeLoginModal);
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                const loginModal = document.getElementById('loginModal');
+                if (event.target === loginModal) {
+                    closeLoginModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

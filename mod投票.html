@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod投票 - TBNB</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <style>
+        /* 投票页面专属样式 */
+        .vote-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .user-info span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .download-logs-btn {
+            padding: 0.5rem 1rem;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .download-logs-btn:hover {
+            background: #ffc107;
+            transform: translateY(-2px);
+        }
+        
+        .login-form {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+        
+        .login-form h2 {
+            color: #ffd700;
+            margin-bottom: 2rem;
+        }
+        
+        .login-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ffd700;
+        }
+        
+        .login-tab {
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .login-tab.active {
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .login-panel {
+            display: none;
+        }
+        
+        .login-panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            color: #fff;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .btn {
+            padding: 0.8rem 2rem;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #ffc107;
+            transform: translateY(-2px);
+        }
+        
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-panel h2 {
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-panel textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            color: #fff;
+            resize: vertical;
+            min-height: 200px;
+        }
+        
+        .admin-panel textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .vote-post {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .vote-post h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
+        .vote-content {
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        
+        .vote-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+        
+        .vote-stat {
+            text-align: center;
+        }
+        
+        .vote-stat .count {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        
+        .vote-stat .label {
+            color: #ccc;
+        }
+        
+        .vote-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .vote-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .delete-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .agree-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .agree-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .disagree-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .disagree-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .delete-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 上方标题栏 -->
+    <header class="top-header">
+        <div class="header-content">
+            <h1>TBNB <span>BACKROOMS</span></h1>
+        </div>
+    </header>
+    
+    <!-- 收缩式侧边栏 - 鼠标靠近弹出 -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="sidebar-list">
+                <li class="sidebar-item"><a href="index.html" class="sidebar-link">首页</a></li>
+                <li class="sidebar-item"><a href="index.html#about" class="sidebar-link">关于我们</a></li>
+                <li class="sidebar-item"><a href="index.html#services" class="sidebar-link">服务器介绍</a></li>
+                <li class="sidebar-item"><a href="index.html#team" class="sidebar-link">核心团队</a></li>
+                <li class="sidebar-item"><a href="index.html#contact" class="sidebar-link">联系我们</a></li>
+                <li class="sidebar-item"><a href="wiki.html" class="sidebar-link">百科</a></li>
+            </ul>
+        </nav>
+    </aside>
+    
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+        <div class="vote-container">
+            <!-- 登录表单 -->
+            <div id="login-form" class="login-form">
+                <h2>用户登录</h2>
+                <div class="login-tabs">
+                    <div class="login-tab active" onclick="switchTab('admin-login')">管理员登录</div>
+                    <div class="login-tab" onclick="switchTab('user-login')">普通用户登录</div>
+                    <div class="login-tab" onclick="switchTab('register')">注册账户</div>
+                </div>
+                
+                <!-- 管理员登录面板 -->
+                <div id="admin-login" class="login-panel active">
+                    <div class="form-group">
+                        <label for="admin-username">用户名</label>
+                        <input type="text" id="admin-username" placeholder="请输入管理员用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">密码</label>
+                        <input type="password" id="admin-password" placeholder="请输入管理员密码">
+                    </div>
+                    <button class="btn" onclick="adminLogin()">登录</button>
+                </div>
+                
+                <!-- 普通用户登录面板 -->
+                <div id="user-login" class="login-panel">
+                    <div class="form-group">
+                        <label for="user-username">用户名</label>
+                        <input type="text" id="user-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-password">密码</label>
+                        <input type="password" id="user-password" placeholder="请输入密码">
+                    </div>
+                    <button class="btn" onclick="userLogin()">登录</button>
+                </div>
+                
+                <!-- 注册面板 -->
+                <div id="register" class="login-panel">
+                    <div class="form-group">
+                        <label for="reg-username">用户名</label>
+                        <input type="text" id="reg-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">密码</label>
+                        <input type="password" id="reg-password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-confirm-password">确认密码</label>
+                        <input type="password" id="reg-confirm-password" placeholder="请再次输入密码">
+                    </div>
+                    <button class="btn" onclick="registerUser()">注册</button>
+                </div>
+            </div>
+            
+            <!-- 管理员面板 -->
+            <div id="admin-panel" class="admin-panel" style="display: none;">
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+                <h2>发布投票</h2>
+                <textarea id="vote-content" placeholder="请输入投票内容（支持Markdown格式）"></textarea>
+                <br>
+                <button class="btn" onclick="publishVote()">发布投票</button>
+            </div>
+            
+            <!-- 用户信息和退出登录 -->
+            <div id="user-info" class="user-info" style="display: none;">
+                <span id="current-user"></span>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+                <button class="download-logs-btn" onclick="downloadLogs()">下载日志</button>
+            </div>
+            
+            <!-- 投票列表 -->
+            <div id="vote-list"></div>
+        </div>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3>TBNB BACKROOMS</h3>
+                    <p>专业的服务器团队，为您的游戏保驾护航</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="index.html#about">关于我们</a></li>
+                        <li><a href="index.html#services">服务项目</a></li>
+                        <li><a href="index.html#team">核心团队</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TBNB BACKROOMS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 初始化数据
+        function initData() {
+            if (!localStorage.getItem('votes')) {
+                localStorage.setItem('votes', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('loginLogs')) {
+                localStorage.setItem('loginLogs', JSON.stringify([]));
+            }
+        }
+        
+        // 获取浏览器指纹（作为唯一标识，替代MAC地址）
+        function getBrowserFingerprint() {
+            // 收集浏览器信息生成唯一指纹
+            const fingerPrint = [
+                navigator.userAgent,
+                navigator.language,
+                navigator.platform,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                navigator.cpuClass || 'unknown',
+                navigator.deviceMemory || 'unknown',
+                navigator.hardwareConcurrency || 'unknown'
+            ].join('|');
+            
+            // 简单的哈希函数
+            let hash = 0;
+            for (let i = 0; i < fingerPrint.length; i++) {
+                const char = fingerPrint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return Math.abs(hash).toString(16);
+        }
+        
+        // 记录登录日志
+        function logLogin(username, type) {
+            const logs = JSON.parse(localStorage.getItem('loginLogs'));
+            const log = {
+                username: username,
+                type: type, // 'admin' 或 'user'
+                timestamp: new Date().toISOString(),
+                ip: '127.0.0.1' // 模拟IP地址，实际项目中可以通过后端获取
+            };
+            logs.push(log);
+            localStorage.setItem('loginLogs', JSON.stringify(logs));
+        }
+        
+        // 下载日志
+        function downloadLogs() {
+            try {
+                // 定义logs变量，从localStorage获取登录日志
+                const logs = JSON.parse(localStorage.getItem('loginLogs')) || [];
+                let logText = '登录日志\n';
+                logText += '='.repeat(50) + '\n';
+                
+                if (logs.length === 0) {
+                    logText += '暂无登录记录\n';
+                } else {
+                    logs.forEach(log => {
+                        const date = new Date(log.timestamp);
+                        logText += `时间: ${date.toLocaleString()}\n`;
+                        logText += `用户名: ${log.username}\n`;
+                        logText += `类型: ${log.type === 'admin' ? '管理员' : '普通用户'}\n`;
+                        logText += `IP: ${log.ip}\n`;
+                        logText += '-' .repeat(50) + '\n';
+                    });
+                }
+                
+                // 创建Blob对象
+                const blob = new Blob([logText], { type: 'text/plain' });
+                
+                // 创建下载链接
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '123.txt';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                
+                // 模拟点击下载
+                a.click();
+                
+                // 清理
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                console.log('日志下载成功');
+            } catch (error) {
+                console.error('下载日志时出错:', error);
+                alert('下载日志时出错，请检查控制台');
+            }
+        }
+        
+        // 切换标签页
+        function switchTab(tabId) {
+            // 隐藏所有面板
+            document.querySelectorAll('.login-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // 移除所有标签的活动状态
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的面板
+            document.getElementById(tabId).classList.add('active');
+            
+            // 激活选中的标签
+            event.target.classList.add('active');
+        }
+        
+        // 管理员登录
+        function adminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === 'root' && password === '123456789') {
+                localStorage.setItem('adminLoggedIn', 'true');
+                // 记录登录日志
+                logLogin(username, 'admin');
+                showAdminPanel();
+            } else {
+                alert('管理员用户名或密码错误');
+            }
+        }
+        
+        // 普通用户登录
+        function userLogin() {
+            const username = document.getElementById('user-username').value;
+            const password = document.getElementById('user-password').value;
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('currentUser', username);
+                // 记录登录日志
+                logLogin(username, 'user');
+                showUserPanel();
+            } else {
+                alert('用户名或密码错误');
+            }
+        }
+        
+        // 注册用户
+        function registerUser() {
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            
+            if (!username || !password) {
+                alert('用户名和密码不能为空');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            const existingUser = users.find(u => u.username === username);
+            
+            if (existingUser) {
+                alert('用户名已存在');
+                return;
+            }
+            
+            // 添加新用户
+            users.push({ username, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('注册成功，请登录');
+            switchTab('user-login');
+        }
+        
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('currentUser');
+            
+            // 隐藏用户信息和退出登录按钮
+            const userInfo = document.getElementById('user-info');
+            userInfo.style.display = 'none';
+            
+            showLoginForm();
+        }
+        
+        // 显示登录表单
+        function showLoginForm() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+        
+        // 显示管理员面板
+        function showAdminPanel() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            
+            // 显示用户信息和退出登录按钮
+            const userInfo = document.getElementById('user-info');
+            const currentUser = document.getElementById('current-user');
+            userInfo.style.display = 'flex';
+            currentUser.textContent = '管理员';
+        }
+        
+        // 显示用户面板
+        function showUserPanel() {
+            document.getElementById('login-form').style.display = 'none';
+            
+            // 显示用户信息和退出登录按钮
+            const userInfo = document.getElementById('user-info');
+            const currentUser = document.getElementById('current-user');
+            userInfo.style.display = 'flex';
+            currentUser.textContent = '用户: ' + localStorage.getItem('currentUser');
+        }
+        
+        // 发布投票
+        function publishVote() {
+            const content = document.getElementById('vote-content').value;
+            if (!content) {
+                alert('请输入投票内容');
+                return;
+            }
+            
+            const votes = JSON.parse(localStorage.getItem('votes'));
+            const newVote = {
+                id: Date.now(),
+                content: content,
+                agreeCount: 0,
+                disagreeCount: 0,
+            };
+            
+            votes.push(newVote);
+            localStorage.setItem('votes', JSON.stringify(votes));
+            
+            document.getElementById('vote-content').value = '';
+            renderVotes();
+        }
+        
+        // 渲染投票列表
+        function renderVotes() {
+            const voteList = document.getElementById('vote-list');
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true' || localStorage.getItem('userLoggedIn') === 'true';
+            
+            if (!isLoggedIn) {
+                voteList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 2rem;">请先登录后查看投票</p>';
+                return;
+            }
+            
+            const votes = JSON.parse(localStorage.getItem('votes') || '[]');
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            
+            if (votes.length === 0) {
+                voteList.innerHTML = '<p style="text-align: center; color: #ccc; margin-top: 2rem;">暂无投票</p>';
+                return;
+            }
+            
+            const converter = new showdown.Converter();
+            voteList.innerHTML = '';
+            
+            votes.forEach(vote => {
+                const votePost = document.createElement('div');
+                votePost.className = 'vote-post';
+                votePost.innerHTML = `
+                    <h3>投票 #${vote.id}</h3>
+                    <div class="vote-content">${converter.makeHtml(vote.content)}</div>
+                    <div class="vote-stats">
+                        <div class="vote-stat">
+                            <div class="count" id="agree-count-${vote.id}">${vote.agreeCount}</div>
+                            <div class="label">认同</div>
+                        </div>
+                        <div class="vote-stat">
+                            <div class="count" id="disagree-count-${vote.id}">${vote.disagreeCount}</div>
+                            <div class="label">不建议</div>
+                        </div>
+                    </div>
+                    <div class="vote-buttons">
+                        <button class="vote-btn agree-btn" onclick="vote(${vote.id}, 'agree')">认同</button>
+                        <button class="vote-btn disagree-btn" onclick="vote(${vote.id}, 'disagree')">不建议</button>
+                        ${isAdmin ? `<button class="delete-btn" onclick="deleteVote(${vote.id})">删除投票</button>` : ''}
+                    </div>
+                `;
+                voteList.appendChild(votePost);
+            });
+        }
+        
+        // 投票功能
+        function vote(voteId, type) {
+            const votes = JSON.parse(localStorage.getItem('votes'));
+            const voteIndex = votes.findIndex(v => v.id === voteId);
+            
+            if (voteIndex !== -1) {
+                // 获取浏览器指纹（替代MAC地址）
+                const userFingerprint = getBrowserFingerprint();
+                
+                // 初始化已投票指纹记录
+                if (!localStorage.getItem('votedFingerprints')) {
+                    localStorage.setItem('votedFingerprints', JSON.stringify({}));
+                }
+                
+                const votedFingerprints = JSON.parse(localStorage.getItem('votedFingerprints'));
+                
+                // 检查该指纹是否已投票
+                if (!votedFingerprints[voteId]) {
+                    votedFingerprints[voteId] = [];
+                }
+                
+                if (votedFingerprints[voteId].includes(userFingerprint)) {
+                    alert('您已经投过票了，每个设备只能投票一次');
+                    return;
+                }
+                
+                // 记录投票
+                if (type === 'agree') {
+                    votes[voteIndex].agreeCount++;
+                } else if (type === 'disagree') {
+                    votes[voteIndex].disagreeCount++;
+                }
+                
+                // 记录已投票指纹
+                votedFingerprints[voteId].push(userFingerprint);
+                localStorage.setItem('votedFingerprints', JSON.stringify(votedFingerprints));
+                localStorage.setItem('votes', JSON.stringify(votes));
+                
+                renderVotes();
+            }
+        }
+        
+        // 删除投票功能（管理员专用）
+        function deleteVote(voteId) {
+            // 确认是否为管理员
+            if (localStorage.getItem('adminLoggedIn') !== 'true') {
+                alert('只有管理员可以删除投票');
+                return;
+            }
+            
+            if (confirm('确定要删除这个投票吗？此操作不可恢复。')) {
+                let votes = JSON.parse(localStorage.getItem('votes'));
+                let votedFingerprints = JSON.parse(localStorage.getItem('votedFingerprints')) || {};
+                
+                // 删除投票
+                votes = votes.filter(vote => vote.id !== voteId);
+                
+                // 删除该投票的已投票指纹记录
+                if (votedFingerprints[voteId]) {
+                    delete votedFingerprints[voteId];
+                }
+                
+                // 保存到localStorage
+                localStorage.setItem('votes', JSON.stringify(votes));
+                localStorage.setItem('votedFingerprints', JSON.stringify(votedFingerprints));
+                
+                alert('投票已成功删除');
+                renderVotes();
+            }
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initData();
+            
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                showAdminPanel();
+            } else if (localStorage.getItem('userLoggedIn') === 'true') {
+                showUserPanel();
+            } else {
+                showLoginForm();
+            }
+            
+            // 渲染投票列表
+            renderVotes();
+            
+            // 每隔15秒刷新一次页面
+            setInterval(function() {
+                location.reload();
+            }, 15000); // 15秒 = 15000毫秒
+        });
+    </script>
+</body>
+</html>

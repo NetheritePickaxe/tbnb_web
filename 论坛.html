@@ -40,6 +40,55 @@
             margin-bottom: 1rem;
         }
         
+        .admin-controls h4 {
+            color: #ffd700;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        
+        .members-list {
+            margin-top: 1rem;
+        }
+        
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .delete-member-btn {
+            padding: 0.3rem 0.8rem;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-member-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .member-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .member-username {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .member-registered {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
         .ban-form {
             display: flex;
             gap: 1rem;
@@ -444,6 +493,10 @@
                     <h4>已封禁用户</h4>
                     <div id="bannedUsers"></div>
                 </div>
+                <div class="members-list" id="membersList">
+                    <h4>已注册成员</h4>
+                    <div id="members"></div>
+                </div>
             </div>
             
             <!-- 发帖表单 -->
@@ -532,6 +585,30 @@
     <!-- JavaScript 文件 -->
     <script src="script.js"></script>
     <script>
+        // 获取浏览器指纹（作为设备唯一标识）
+        function getDeviceFingerprint() {
+            // 生成基于浏览器信息的指纹
+            const fingerprint = [
+                navigator.userAgent,
+                navigator.language,
+                navigator.platform,
+                screen.width + 'x' + screen.height,
+                window.innerWidth + 'x' + window.innerHeight,
+                navigator.hardwareConcurrency,
+                navigator.deviceMemory
+            ].join('|');
+            
+            // 使用简单的哈希函数生成指纹
+            let hash = 0;
+            for (let i = 0; i < fingerprint.length; i++) {
+                const char = fingerprint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return Math.abs(hash).toString(16);
+        }
+        
         // 初始化数据
         function initData() {
             // 初始化帖子数据
@@ -547,6 +624,11 @@
             // 初始化用户数据
             if (!localStorage.getItem('users')) {
                 localStorage.setItem('users', JSON.stringify([]));
+            }
+            
+            // 初始化已注册设备数据
+            if (!localStorage.getItem('registeredDevices')) {
+                localStorage.setItem('registeredDevices', JSON.stringify([]));
             }
         }
         
@@ -605,11 +687,18 @@
                         return;
                     }
                     
-                    // 简单的用户登录逻辑，实际应用中应该有更安全的验证
-                    localStorage.setItem('userLoggedIn', 'true');
-                    localStorage.setItem('username', username);
-                    updateUserStatus();
-                    closeLoginModal();
+                    // 验证用户凭证
+                    const users = JSON.parse(localStorage.getItem('users'));
+                    const user = users.find(user => user.username === username && user.password === password);
+                    
+                    if (user) {
+                        localStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('username', username);
+                        updateUserStatus();
+                        closeLoginModal();
+                    } else {
+                        alert('用户名或密码错误');
+                    }
                 } else {
                     alert('请输入用户名和密码');
                 }
@@ -659,7 +748,39 @@
                 return;
             }
             
-            // 简单的注册逻辑，实际应用中应该有更安全的验证和存储
+            // 获取设备指纹
+            const deviceFingerprint = getDeviceFingerprint();
+            
+            // 检查该设备是否已经注册过
+            const registeredDevices = JSON.parse(localStorage.getItem('registeredDevices'));
+            if (registeredDevices.includes(deviceFingerprint)) {
+                alert('该设备已经注册过账户，每个设备只能注册一次');
+                return;
+            }
+            
+            // 检查用户名是否已存在
+            const users = JSON.parse(localStorage.getItem('users'));
+            const existingUser = users.find(user => user.username === username);
+            if (existingUser) {
+                alert('该用户名已存在，请选择其他用户名');
+                return;
+            }
+            
+            // 注册新用户
+            const newUser = {
+                username: username,
+                password: password, // 实际应用中应该加密存储
+                deviceFingerprint: deviceFingerprint,
+                registeredAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // 记录设备已注册
+            registeredDevices.push(deviceFingerprint);
+            localStorage.setItem('registeredDevices', JSON.stringify(registeredDevices));
+            
             alert('注册成功！请使用新账户登录');
             
             // 切换到登录标签
@@ -687,6 +808,7 @@
                 postForm.style.display = 'block';
                 adminControls.style.display = 'block';
                 renderBannedUsers();
+                renderMembers();
             } else if (isUserLoggedIn) {
                 const username = localStorage.getItem('username');
                 userStatus.textContent = `用户 ${username} 已登录`;
@@ -969,6 +1091,63 @@
                     <button class="unban-btn" onclick="unbanUser('${username}')">解封</button>
                 `;
                 bannedUsersContainer.appendChild(userElement);
+            });
+        }
+        
+        // 删除成员账户
+        function deleteMember(username) {
+            if (confirm(`确定要删除成员 ${username} 的账户吗？此操作不可恢复。`)) {
+                // 从用户列表中删除
+                let users = JSON.parse(localStorage.getItem('users'));
+                const userToDelete = users.find(user => user.username === username);
+                
+                if (userToDelete) {
+                    // 从用户列表中移除
+                    users = users.filter(user => user.username !== username);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // 从已注册设备列表中移除
+                    let registeredDevices = JSON.parse(localStorage.getItem('registeredDevices'));
+                    registeredDevices = registeredDevices.filter(fingerprint => fingerprint !== userToDelete.deviceFingerprint);
+                    localStorage.setItem('registeredDevices', JSON.stringify(registeredDevices));
+                    
+                    // 从封禁列表中移除（如果存在）
+                    let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+                    bannedUsers = bannedUsers.filter(user => user !== username);
+                    localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+                    
+                    // 重新渲染成员列表和封禁用户列表
+                    renderMembers();
+                    renderBannedUsers();
+                    
+                    alert(`成员 ${username} 的账户已被删除`);
+                }
+            }
+        }
+        
+        // 渲染已注册成员列表
+        function renderMembers() {
+            const membersContainer = document.getElementById('members');
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            if (users.length === 0) {
+                membersContainer.innerHTML = '<p style="color: #ccc;">暂无注册成员</p>';
+                return;
+            }
+            
+            membersContainer.innerHTML = '';
+            
+            users.forEach(user => {
+                const userElement = document.createElement('div');
+                userElement.className = 'member-item';
+                userElement.innerHTML = `
+                    <div class="member-info">
+                        <span class="member-username">${user.username}</span>
+                        <span class="member-registered">注册时间: ${new Date(user.registeredAt).toLocaleString()}</span>
+                    </div>
+                    <button class="delete-member-btn" onclick="deleteMember('${user.username}')">删除</button>
+                `;
+                membersContainer.appendChild(userElement);
             });
         }
         

@@ -737,6 +737,24 @@
                     </select>
                 </div>
             </div>
+            <div class="ban-form-group" style="margin-top: 1rem;">
+                <label for="banReason">禁言理由</label>
+                <select id="banReason" onchange="toggleCustomBanReason()">
+                    <option value="">请选择理由</option>
+                    <option value="敏感词汇">发布敏感词汇</option>
+                    <option value="政治内容">发布涉及政治的内容</option>
+                    <option value="广告 spam">发布广告或垃圾信息</option>
+                    <option value="人身攻击">进行人身攻击</option>
+                    <option value="违反规则">违反论坛规则</option>
+                    <option value="custom">其他理由</option>
+                </select>
+            </div>
+            <div id="customBanReason" style="display: none; margin-top: 1rem;">
+                <div class="ban-form-group">
+                    <label for="customBanReasonText">自定义禁言理由</label>
+                    <textarea id="customBanReasonText" placeholder="请输入禁言理由" rows="3"></textarea>
+                </div>
+            </div>
             <div class="ban-buttons">
                 <button class="btn" onclick="closeBanModal()">取消</button>
                 <button class="btn" onclick="banUser()">确定禁言</button>
@@ -833,10 +851,10 @@
             
             if (mutedUser) {
                 if (mutedUser.expiryTime === -1) {
-                    return '永久禁言';
+                    return `永久禁言\n原因: ${mutedUser.reason || '未指定'}`;
                 } else if (Date.now() < mutedUser.expiryTime) {
                     const expiryDate = new Date(mutedUser.expiryTime);
-                    return `禁言至: ${expiryDate.toLocaleString()}`;
+                    return `禁言至: ${expiryDate.toLocaleString()}\n原因: ${mutedUser.reason || '未指定'}`;
                 } else {
                     // 禁言已过期，自动解除
                     const updatedMutedUsers = mutedUsers.filter(user => user.username !== username);
@@ -1287,7 +1305,7 @@
                     <div class="member-info">
                         <span class="member-username">${user.username}</span>
                         <span class="member-registered">注册时间: ${new Date(user.registeredAt).toLocaleString()}</span>
-                        ${muteStatus ? `<span class="member-status">${muteStatus}</span>` : ''}
+                        ${muteStatus ? `<span class="member-status">${muteStatus.replace(/\\n/g, '<br>')}</span>` : ''}
                     </div>
                     ${actionButtons}
                 `;
@@ -1384,6 +1402,18 @@
             }
         }
         
+        // 切换自定义禁言理由显示
+        function toggleCustomBanReason() {
+            const banReason = document.getElementById('banReason').value;
+            const customBanReason = document.getElementById('customBanReason');
+            
+            if (banReason === 'custom') {
+                customBanReason.style.display = 'block';
+            } else {
+                customBanReason.style.display = 'none';
+            }
+        }
+        
         // 禁言用户
         function banUser() {
             const username = document.getElementById('banUsername').value;
@@ -1413,6 +1443,20 @@
                 }
             }
             
+            // 处理禁言理由
+            let banReason = document.getElementById('banReason').value;
+            if (banReason === 'custom') {
+                const customReason = document.getElementById('customBanReasonText').value.trim();
+                if (!customReason) {
+                    alert('请输入禁言理由');
+                    return;
+                }
+                banReason = customReason;
+            } else if (!banReason) {
+                alert('请选择禁言理由');
+                return;
+            }
+            
             const expiryTime = duration === -1 ? -1 : Date.now() + duration;
             
             let mutedUsers = JSON.parse(localStorage.getItem('mutedUsers'));
@@ -1420,13 +1464,16 @@
             // 检查用户是否已被禁言
             const existingMutedUser = mutedUsers.find(user => user.username === username);
             if (existingMutedUser) {
-                // 更新禁言时间
+                // 更新禁言时间和理由
                 existingMutedUser.expiryTime = expiryTime;
+                existingMutedUser.reason = banReason;
+                existingMutedUser.bannedAt = Date.now();
             } else {
                 // 添加新的禁言记录
                 mutedUsers.push({
                     username: username,
                     expiryTime: expiryTime,
+                    reason: banReason,
                     bannedAt: Date.now()
                 });
             }

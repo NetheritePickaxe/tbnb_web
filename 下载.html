@@ -133,6 +133,24 @@
             background: #da190b;
             transform: translateY(-2px);
         }
+        
+        /* 点击效果 - TBNB图片显示 */
+        .click-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background-image: url('TBNB.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -255,6 +273,25 @@
             });
         }
         
+        // 点击效果 - 显示TBNB图片
+        function initClickEffect() {
+            // 创建点击效果元素
+            const clickEffect = document.createElement('div');
+            clickEffect.className = 'click-effect';
+            document.body.appendChild(clickEffect);
+            
+            // 点击事件处理
+            document.addEventListener('click', function(e) {
+                // 显示效果
+                clickEffect.style.opacity = '1';
+                
+                // 2秒后淡出
+                setTimeout(function() {
+                    clickEffect.style.opacity = '0';
+                }, 1000);
+            });
+        }
+        
         // 确保页面内容显示
         document.addEventListener('DOMContentLoaded', function() {
             // 确保body元素可见
@@ -267,6 +304,9 @@
                 section.style.opacity = '1';
                 section.style.transform = 'translateY(0)';
             });
+            
+            // 初始化点击效果
+            initClickEffect();
         });
     </script>
 </body>

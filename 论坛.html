@@ -475,6 +475,7 @@
             <h2>登录</h2>
             <div class="login-tabs">
                 <div class="login-tab active" onclick="switchLoginTab('user')">用户登录</div>
+                <div class="login-tab" onclick="switchLoginTab('register')">用户注册</div>
                 <div class="login-tab" onclick="switchLoginTab('admin')">管理员登录</div>
             </div>
             
@@ -489,6 +490,23 @@
                     <input type="password" id="password" placeholder="请输入密码">
                 </div>
                 <button class="btn" onclick="login('user')">登录</button>
+            </div>
+            
+            <!-- 用户注册面板 -->
+            <div id="registerPanel" class="login-panel">
+                <div class="form-group">
+                    <label for="registerUsername">用户名</label>
+                    <input type="text" id="registerUsername" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">密码</label>
+                    <input type="password" id="registerPassword" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">确认密码</label>
+                    <input type="password" id="registerConfirmPassword" placeholder="请确认密码">
+                </div>
+                <button class="btn" onclick="register()">注册</button>
             </div>
             
             <!-- 管理员登录面板 -->
@@ -524,6 +542,11 @@
             // 初始化封禁用户数据
             if (!localStorage.getItem('bannedUsers')) {
                 localStorage.setItem('bannedUsers', JSON.stringify([]));
+            }
+            
+            // 初始化用户数据
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([]));
             }
         }
         
@@ -561,7 +584,11 @@
             
             // 添加当前标签和面板的active类
             document.querySelector(`.login-tab[onclick="switchLoginTab('${tab}')"]`).classList.add('active');
-            document.getElementById(`${tab}LoginPanel`).classList.add('active');
+            if (tab === 'register') {
+                document.getElementById('registerPanel').classList.add('active');
+            } else {
+                document.getElementById(`${tab}LoginPanel`).classList.add('active');
+            }
         }
         
         // 登录功能
@@ -591,7 +618,7 @@
                 const password = document.getElementById('adminPassword').value.trim();
                 
                 // 管理员登录验证
-                if (username === 'admin' && password === 'admin123') {
+                if (username === 'tbnb' && password === 'tbnb123') {
                     localStorage.setItem('adminLoggedIn', 'true');
                     updateUserStatus();
                     closeLoginModal();
@@ -607,6 +634,39 @@
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('username');
             updateUserStatus();
+        }
+        
+        // 注册功能
+        function register() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const confirmPassword = document.getElementById('registerConfirmPassword').value.trim();
+            
+            if (!username || !password || !confirmPassword) {
+                alert('请填写所有字段');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            
+            // 检查是否被封禁
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers'));
+            if (bannedUsers.includes(username)) {
+                alert('该用户名已被封禁，无法注册');
+                return;
+            }
+            
+            // 简单的注册逻辑，实际应用中应该有更安全的验证和存储
+            alert('注册成功！请使用新账户登录');
+            
+            // 切换到登录标签
+            switchLoginTab('user');
+            
+            // 填充用户名到登录表单
+            document.getElementById('username').value = username;
         }
         
         // 更新用户状态

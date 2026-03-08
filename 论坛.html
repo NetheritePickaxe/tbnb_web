@@ -1567,10 +1567,28 @@
                 }
             });
             
-            // 每隔5秒自动刷新页面
-            setInterval(function() {
-                location.reload();
-            }, 5000); // 5秒 = 5000毫秒
+            // 实现20秒无鼠标点击后刷新页面
+            let inactivityTimer;
+            
+            // 重置计时器的函数
+            function resetTimer() {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(function() {
+                    location.reload();
+                }, 20000); // 20秒 = 20000毫秒
+            }
+            
+            // 初始设置计时器
+            resetTimer();
+            
+            // 监听鼠标点击事件
+            document.addEventListener('click', resetTimer);
+            
+            // 监听鼠标移动事件
+            document.addEventListener('mousemove', resetTimer);
+            
+            // 监听键盘事件
+            document.addEventListener('keydown', resetTimer);
         });
     </script>
 </body>

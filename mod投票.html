@@ -784,6 +784,11 @@
             
             // 渲染投票列表
             renderVotes();
+            
+            // 每隔15秒刷新一次页面
+            setInterval(function() {
+                location.reload();
+            }, 15000); // 15秒 = 15000毫秒
         });
     </script>
 </body>

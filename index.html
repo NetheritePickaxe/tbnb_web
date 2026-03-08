@@ -733,6 +733,9 @@
     <!-- JavaScript 文件 -->
     <script src="script.js"></script>
     <script>
+        // 全局变量存储服务器状态
+        let isServerOnline = false;
+        
         // 检查服务器状态
         function checkServerStatus() {
             const statusElement = document.getElementById('server-status');
@@ -751,10 +754,12 @@
                     // 服务器可访问
                     statusElement.textContent = '在线';
                     statusElement.style.color = '#4CAF50'; // 绿色
+                    isServerOnline = true;
                 } else {
                     // 服务器返回错误状态
                     statusElement.textContent = '离线';
                     statusElement.style.color = '#f44336'; // 红色
+                    isServerOnline = false;
                 }
             };
             
@@ -762,12 +767,14 @@
                 // 连接错误
                 statusElement.textContent = '离线';
                 statusElement.style.color = '#f44336'; // 红色
+                isServerOnline = false;
             };
             
             xhr.ontimeout = function() {
                 // 连接超时
                 statusElement.textContent = '离线';
                 statusElement.style.color = '#f44336'; // 红色
+                isServerOnline = false;
             };
             
             xhr.send();

@@ -17,7 +17,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // 数字动画效果
 function animateNumbers() {
-    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time)');
+    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time):not(#server-status)';
     
     numberElements.forEach(element => {
         // 添加标记，防止重复动画
@@ -49,9 +49,16 @@ function startServerRunTime() {
     const serverStartTime = new Date('2024-01-01T01:00:00');
     
     function updateRunTime() {
-        const now = new Date();
-        const runTimeInSeconds = Math.floor((now - serverStartTime) / 1000);
-        serverRunTimeElement.textContent = runTimeInSeconds;
+        // 检查服务器状态
+        const statusElement = document.getElementById('server-status');
+        const isServerOnline = statusElement && statusElement.textContent === '在线';
+        
+        if (isServerOnline) {
+            const now = new Date();
+            const runTimeInSeconds = Math.floor((now - serverStartTime) / 1000);
+            serverRunTimeElement.textContent = runTimeInSeconds;
+        }
+        // 如果服务器离线，不更新运行时间
     }
     
     // 立即更新一次

@@ -1566,6 +1566,11 @@
                     closeBanModal();
                 }
             });
+            
+            // 每隔5秒自动刷新页面
+            setInterval(function() {
+                location.reload();
+            }, 5000); // 5秒 = 5000毫秒
         });
     </script>
 </body>

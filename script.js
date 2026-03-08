@@ -17,7 +17,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // 数字动画效果
 function animateNumbers() {
-    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time):not(#server-status)';
+    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time)');
     
     numberElements.forEach(element => {
         // 添加标记，防止重复动画

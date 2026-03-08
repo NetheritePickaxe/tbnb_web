@@ -17,7 +17,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // 数字动画效果
 function animateNumbers() {
-    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time):not(#server-status)';
+    const numberElements = document.querySelectorAll('.stat-number:not(.animated):not(#server-run-time):not(#server-status)');
     
     numberElements.forEach(element => {
         // 添加标记，防止重复动画
@@ -51,7 +51,10 @@ function startServerRunTime() {
     function updateRunTime() {
         // 检查服务器状态
         const statusElement = document.getElementById('server-status');
-        const isServerOnline = statusElement && statusElement.textContent === '在线';
+        // 检查服务器状态是否为在线（考虑可能的不同文本形式）
+        const isServerOnline = statusElement && 
+            (statusElement.textContent.trim() === '在线' || 
+             statusElement.textContent.trim() === '在线');
         
         if (isServerOnline) {
             const now = new Date();

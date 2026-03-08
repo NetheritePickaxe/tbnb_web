@@ -1253,6 +1253,41 @@ section.visible {
     background-repeat: no-repeat;
 }
 
+.team-member:nth-child(12) .member-image {
+    /* 保持边框和阴影效果，移除默认渐变背景，使用实际图片 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.team-member:nth-child(13) .member-image {
+    /* 保持边框和阴影效果，移除默认渐变背景，使用实际图片 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.team-member:nth-child(14) .member-image {
+    /* 保持边框和阴影效果，移除默认渐变背景，使用实际图片 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.team-member:nth-child(15) .member-image {
+    /* 保持边框和阴影效果，移除默认渐变背景，使用实际图片 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.team-member:nth-child(16) .member-image {
+    /* 保持边框和阴影效果，移除默认渐变背景，使用实际图片 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .team-member:hover .member-image {
     border-color: #ffffff;
     box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
